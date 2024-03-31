@@ -1,0 +1,886 @@
+{
+  "version": "2.2.0",
+  "summary": {
+    "title": "TM1",
+    "owner": "",
+    "description": "...",
+    "id": 0
+  },
+  "detail": {
+    "contributors": [],
+    "diagrams": [
+      {
+        "id": 0,
+        "title": "New STRIDE diagram",
+        "diagramType": "STRIDE",
+        "placeholder": "New STRIDE diagram description",
+        "thumbnail": "./public/content/images/thumbnail.stride.jpg",
+        "version": "2.2.0",
+        "cells": [
+          {
+            "position": {
+              "x": 180,
+              "y": 510
+            },
+            "size": {
+              "width": 120,
+              "height": 60
+            },
+            "attrs": {
+              "text": {
+                "text": "SQL DB"
+              },
+              "topLine": {
+                "strokeWidth": 1.5,
+                "strokeDasharray": null
+              },
+              "bottomLine": {
+                "strokeWidth": 1.5,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "store",
+            "zIndex": 1,
+            "id": "dc4c8f2d-c3bc-4c4c-97a7-e1d449a1d2d7",
+            "data": {
+              "type": "tm.Store",
+              "name": "SQL DB",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isALog": false,
+              "isEncrypted": false,
+              "isSigned": false,
+              "storesCredentials": false,
+              "storesInventory": false,
+              "threats": [
+                {
+                  "id": "a0c40ed4-e915-40cd-9235-6fdd5f3b9502",
+                  "title": "Info threat",
+                  "status": "Mitigated",
+                  "severity": "Medium",
+                  "type": "Information disclosure",
+                  "description": "An attacker extract data from a database containing user account info.",
+                  "mitigation": "1. Encrypt sensitive data stored in the database, especially user account information such as passwords, email addresses, and personal details. Use strong encryption algorithms and ensure that encryption keys are securely managed and stored.\n2.  Implement strict access controls to limit access to the database to authorized personnel only. Use role-based access control (RBAC) mechanisms to ensure that users and administrators have the minimum necessary privileges required to perform their tasks.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 5,
+                  "score": ""
+                }
+              ]
+            }
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": ""
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "web request",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": []
+            },
+            "id": "bce0e59b-ccba-43fe-98f2-fa9a894da6fa",
+            "source": {
+              "x": 180,
+              "y": 240
+            },
+            "target": {
+              "x": 280,
+              "y": 340
+            },
+            "labels": [
+              "web request"
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": ""
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "web response",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": []
+            },
+            "id": "1bc71d08-523e-43bb-bb9e-87bb087aac9d",
+            "source": {
+              "cell": "af0cd84f-324a-4d18-81a4-d5d53452fe0d"
+            },
+            "target": {
+              "cell": "89ff07d5-4b86-486e-99a4-d623183afa88"
+            },
+            "vertices": [
+              {
+                "x": 323,
+                "y": 240
+              }
+            ],
+            "labels": [
+              "web response"
+            ]
+          },
+          {
+            "shape": "trust-boundary-curve",
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Boundary",
+              "name": "",
+              "description": "",
+              "isTrustBoundary": true,
+              "hasOpenThreats": false
+            },
+            "id": "fa2ab049-e629-489e-a5b5-1ca0681adb93",
+            "source": {
+              "x": 90,
+              "y": 320
+            },
+            "target": {
+              "x": 490,
+              "y": 160
+            },
+            "vertices": [
+              {
+                "x": 410,
+                "y": 270
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": ""
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "query results",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": []
+            },
+            "id": "3cfaff6e-c54d-4f8d-9cd4-e294e92a48ab",
+            "source": {
+              "x": 210,
+              "y": 510
+            },
+            "target": {
+              "cell": "af0cd84f-324a-4d18-81a4-d5d53452fe0d"
+            },
+            "vertices": [
+              {
+                "x": 210,
+                "y": 430
+              },
+              {
+                "x": 230,
+                "y": 400
+              },
+              {
+                "x": 260,
+                "y": 380
+              }
+            ],
+            "labels": [
+              "query results"
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": ""
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "query",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": []
+            },
+            "id": "6992aaa6-4b7d-411d-bd17-a83d2b1766a4",
+            "source": {
+              "cell": "af0cd84f-324a-4d18-81a4-d5d53452fe0d"
+            },
+            "target": {
+              "x": 240,
+              "y": 500
+            },
+            "vertices": [
+              {
+                "x": 300,
+                "y": 400
+              },
+              {
+                "x": 260,
+                "y": 470
+              }
+            ],
+            "labels": [
+              "query"
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": ""
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "read",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": []
+            },
+            "id": "3fa20c63-c15a-4176-85d6-19b044322c6a",
+            "source": {
+              "x": 390,
+              "y": 500
+            },
+            "target": {
+              "cell": "af0cd84f-324a-4d18-81a4-d5d53452fe0d"
+            },
+            "labels": [
+              "read"
+            ]
+          },
+          {
+            "shape": "trust-boundary-curve",
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Boundary",
+              "name": "",
+              "description": "",
+              "isTrustBoundary": true,
+              "hasOpenThreats": false
+            },
+            "id": "87973fca-2710-4cc7-a58e-f74da9f7d5c6",
+            "source": {
+              "x": 80,
+              "y": 370
+            },
+            "target": {
+              "x": 330,
+              "y": 630
+            },
+            "vertices": [
+              {
+                "x": 320,
+                "y": 410
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": ""
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Logging",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": []
+            },
+            "id": "bda651a8-9fcb-4275-8b3a-720abb7584ca",
+            "source": {
+              "x": 360,
+              "y": 350
+            },
+            "target": {
+              "cell": "2cb7bf32-b0d9-4443-ac84-42661394896f"
+            },
+            "vertices": [
+              {
+                "x": 470,
+                "y": 370
+              },
+              {
+                "x": 530,
+                "y": 410
+              }
+            ],
+            "labels": [
+              "Logging"
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": ""
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "write",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": []
+            },
+            "id": "da1b3ff7-a35d-4b87-925f-0a358ae84f91",
+            "source": {
+              "cell": "af0cd84f-324a-4d18-81a4-d5d53452fe0d"
+            },
+            "target": {
+              "x": 440,
+              "y": 500
+            },
+            "labels": [
+              "write"
+            ],
+            "vertices": [
+              {
+                "x": 410,
+                "y": 440
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": ""
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Auth Token",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": []
+            },
+            "id": "78f0dda5-ac5b-4e02-8fa2-87d81e44009d",
+            "source": {
+              "cell": "6655e7bf-3f8c-4620-8097-be1c6253f0d1"
+            },
+            "target": {
+              "cell": "af0cd84f-324a-4d18-81a4-d5d53452fe0d"
+            },
+            "vertices": [
+              {
+                "x": 610,
+                "y": 360
+              }
+            ],
+            "labels": [
+              "Auth Token"
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": ""
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Auth Credentials",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": []
+            },
+            "id": "f733c178-334e-48b9-9118-83ef9d927008",
+            "source": {
+              "cell": "af0cd84f-324a-4d18-81a4-d5d53452fe0d"
+            },
+            "target": {
+              "x": 670,
+              "y": 310
+            },
+            "vertices": [
+              {
+                "x": 550,
+                "y": 290
+              }
+            ],
+            "labels": [
+              "Auth Credentials"
+            ]
+          },
+          {
+            "shape": "trust-boundary-curve",
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Boundary",
+              "name": "",
+              "description": "",
+              "isTrustBoundary": true,
+              "hasOpenThreats": false
+            },
+            "id": "a3f758a4-5672-4272-808e-c306576a6f55",
+            "source": {
+              "x": 550,
+              "y": 170
+            },
+            "target": {
+              "x": 750,
+              "y": 500
+            },
+            "vertices": [
+              {
+                "x": 610,
+                "y": 330
+              }
+            ]
+          },
+          {
+            "position": {
+              "x": 380,
+              "y": 510
+            },
+            "size": {
+              "width": 120,
+              "height": 60
+            },
+            "attrs": {
+              "text": {
+                "text": "Local File Storage"
+              },
+              "topLine": {
+                "stroke": "red",
+                "strokeWidth": 2.5,
+                "strokeDasharray": null
+              },
+              "bottomLine": {
+                "stroke": "red",
+                "strokeWidth": 2.5,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "store",
+            "id": "fbe7d675-e602-4776-b0e0-036c10393da1",
+            "zIndex": 11,
+            "data": {
+              "type": "tm.Store",
+              "name": "Local File Storage",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": true,
+              "isALog": false,
+              "isEncrypted": false,
+              "isSigned": false,
+              "storesCredentials": false,
+              "storesInventory": false,
+              "threats": [
+                {
+                  "id": "d7c521c9-cbf1-4ea1-838a-4c5ff85f1622",
+                  "title": "New STRIDE threat",
+                  "status": "Open",
+                  "severity": "Medium",
+                  "type": "Tampering",
+                  "description": "An attacker abuses the application to perform unintended updates to a local storage.",
+                  "mitigation": "1.  Implement regular file backups and disaster recovery procedures to mitigate the impact of unauthorized file modifications. Maintain backup copies of critical files and directories in secure, offsite locations to ensure data availability in the event of a security incident.\n2.  Apply appropriate file permissions and access controls to restrict access to sensitive files and directories. Use the principle of least privilege to limit the access rights of the application and its components to only necessary files and directories.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 8,
+                  "score": ""
+                }
+              ]
+            }
+          },
+          {
+            "position": {
+              "x": 290,
+              "y": 300
+            },
+            "size": {
+              "width": 70,
+              "height": 70
+            },
+            "attrs": {
+              "text": {
+                "text": "backend"
+              },
+              "body": {
+                "stroke": "red",
+                "strokeWidth": 2.5,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "process",
+            "id": "af0cd84f-324a-4d18-81a4-d5d53452fe0d",
+            "zIndex": 12,
+            "data": {
+              "type": "tm.Process",
+              "name": "backend",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": true,
+              "handlesCardPayment": false,
+              "handlesGoodsOrServices": false,
+              "isWebApplication": false,
+              "privilegeLevel": "",
+              "threats": [
+                {
+                  "id": "6796dd50-5e1d-493e-898f-9acf2255a182",
+                  "title": "DoS attack threat",
+                  "status": "Mitigated",
+                  "severity": "Medium",
+                  "type": "Denial of service",
+                  "description": "An attacker locks a legitimate user out of their account by performing many failed authentication attempts.",
+                  "mitigation": "1. Require users to authenticate using two-factor authentication (2FA) mechanisms, such as SMS codes, authenticator apps, or hardware tokens. 2FA adds an extra layer of security, mitigating the impact of password-based attacks even if credentials are compromised.\n2. Integrate CAPTCHA challenges or other challenge-response mechanisms into the authentication process after multiple failed login attempts. CAPTCHA helps differentiate between human users and automated bots, reducing the effectiveness of brute force attacks.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 6,
+                  "score": ""
+                },
+                {
+                  "id": "a9179bcc-9ab5-421d-8808-c9b5d58ff87c",
+                  "title": "New STRIDE threat",
+                  "status": "Open",
+                  "severity": "Medium",
+                  "type": "Spoofing",
+                  "description": "Provide a description for this threat",
+                  "mitigation": "Provide remediation for this threat or a reason if status is N/A",
+                  "modelType": "STRIDE",
+                  "new": true,
+                  "number": 7,
+                  "score": ""
+                }
+              ]
+            }
+          },
+          {
+            "position": {
+              "x": 110,
+              "y": 180
+            },
+            "size": {
+              "width": 112.5,
+              "height": 60
+            },
+            "attrs": {
+              "text": {
+                "text": "browser"
+              },
+              "body": {
+                "stroke": "red",
+                "strokeWidth": 2.5,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "actor",
+            "id": "89ff07d5-4b86-486e-99a4-d623183afa88",
+            "zIndex": 13,
+            "data": {
+              "type": "tm.Actor",
+              "name": "browser",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": true,
+              "providesAuthentication": false,
+              "threats": [
+                {
+                  "id": "5ecdb80f-b57e-4aee-8a70-38f703acc56e",
+                  "title": "JWT threat",
+                  "status": "Mitigated",
+                  "severity": "Medium",
+                  "type": "Spoofing",
+                  "description": "An attacker steals the authentication token of a legitimate user and uses it to impersonate the user.",
+                  "mitigation": "1. Ensure that authentication tokens are encrypted during transmission and storage. Use secure encryption algorithms and protocols to prevent attackers from intercepting and decrypting tokens.\n2. Implement short expiration periods for authentication tokens. By limiting the lifespan of tokens, even if an attacker manages to steal one, its usefulness will be limited in time.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 3,
+                  "score": ""
+                },
+                {
+                  "id": "738e3a73-9a7e-4063-b6d0-b3e061f57b4c",
+                  "title": "New STRIDE threat",
+                  "status": "Open",
+                  "severity": "Medium",
+                  "type": "Spoofing",
+                  "description": "Provide a description for this threat",
+                  "mitigation": "Provide remediation for this threat or a reason if status is N/A",
+                  "modelType": "STRIDE",
+                  "new": true,
+                  "number": 4,
+                  "score": ""
+                }
+              ]
+            }
+          },
+          {
+            "position": {
+              "x": 680,
+              "y": 290
+            },
+            "size": {
+              "width": 112.5,
+              "height": 60
+            },
+            "attrs": {
+              "text": {
+                "text": "OAuth Provider"
+              },
+              "body": {
+                "stroke": "#333333",
+                "strokeWidth": 1.5,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "actor",
+            "id": "6655e7bf-3f8c-4620-8097-be1c6253f0d1",
+            "zIndex": 14,
+            "data": {
+              "type": "tm.Actor",
+              "name": "OAuth Provider",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "providesAuthentication": false,
+              "threats": []
+            }
+          },
+          {
+            "position": {
+              "x": 523,
+              "y": 510
+            },
+            "size": {
+              "width": 120,
+              "height": 60
+            },
+            "attrs": {
+              "text": {
+                "text": "Log Storage"
+              },
+              "topLine": {
+                "stroke": "red",
+                "strokeWidth": 2.5,
+                "strokeDasharray": null
+              },
+              "bottomLine": {
+                "stroke": "red",
+                "strokeWidth": 2.5,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "store",
+            "id": "2cb7bf32-b0d9-4443-ac84-42661394896f",
+            "zIndex": 15,
+            "data": {
+              "type": "tm.Store",
+              "name": "Log Storage",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": true,
+              "isALog": false,
+              "isEncrypted": false,
+              "isSigned": false,
+              "storesCredentials": false,
+              "storesInventory": false,
+              "threats": [
+                {
+                  "id": "ee2d2e6e-26fa-48a6-b93a-25a73c60e5c5",
+                  "title": "Log manipulation threat",
+                  "status": "Open",
+                  "severity": "Medium",
+                  "type": "Repudiation",
+                  "description": "An attacker manipulates logs to cover their actions.",
+                  "mitigation": "1. Implement measures to ensure the integrity of logs, such as using cryptographic hashes or digital signatures to detect any alterations to log files.\n2. Regularly back up log files and store them securely in multiple locations. Having redundant copies of log files ensures that even if logs are manipulated or deleted, there are backup copies available for analysis.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 2,
+                  "score": ""
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "diagramTop": 1,
+    "reviewer": "",
+    "threatTop": 8
+  }
+}

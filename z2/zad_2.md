@@ -27,8 +27,47 @@
    - **Cilj**: Da izvrše zadatak za koji su plaćeni od strane konkurencije ili nekih drugih aktera
 
 
+## Zadatak B
+### Osetljiva imovina
 
+1. **Korisnički podaci - adrese, brojevi telefona, e-mail adrese...**:
+   - **Izloženost**: Dostupni zaposlenima koji rade na korisničkoj podršci i administratorima
+   - **Bezbednosti ciljevi (CIA)**:
+     - Poverljivost - zaštita ličnih i finansijskih podataka korisnika
+      - Integritet - osiguravanje tačnosti detalja rezervacija
+      -  Dostupnost - osiguravanje pristupa podacima kada je potrebno
+   - **Uticaj oštećenja**: Gubitak poverenja korisnika, kazne zbog kršenja privatnosti podataka, gubitak reputacije kompanije, smanjenje broja korisnika
 
+2. **Finansijski podaci - brojevi kartica, informacije o računima i transakcijama...**:
+   - **Izloženost**: Dostupni zaposlenima u finansijskom sektoru eksternog platnog provajdera ili zaposlenima u finansijskom sektoru same kompanije ukoliko ona poseduje interni sistem za plaćanje
+   - **Bezbednosti ciljevi (CIA)**:
+      - Poverljivost - zaštita finansijskih podataka i transakcija
+      - Integritet - osiguravanje tačnosti finansijskih zapisa
+      -  Dostupnost - osiguravanje tačnosti finansijskih zapisa
+   - **Uticaj oštećenja**: Finansijski gubitak kompanije i korisnika, krađa identiteta, kazne zbog kršenja privatnosti podataka, nepoverenje korisnika
+3. **Intelektualna svojina i poslovni procesi - autorska prava, načini poslovanja, poslovne strategije, analize tržišta, tajne informacije...**:
+   - **Izloženost**: Dostupni određenim timovima unutar kompanije zaduženim za istraživanje, razvoj, marketing i strategiju poslovanja
+   - **Bezbednosti ciljevi (CIA)**:
+     - Poverljivost - zaštita vlasničkih informacija i poslovnih tajni
+      - Integritet - osiguravanje tačnosti i pouzdanosti IP
+      -  Dostupnost - osiguravanje pristupa IP za poslovne operacije
+   - **Uticaj oštećenja**: Gubitak prednosti nad konkurencijom, smanjenje prihoda, gubitak pravnih sporova
+4. **Sistemska infrastruktura - serveri, baze podataka, mrežne komponente...**:
+   - **Izloženost**: Dostupna sistemskim administratorima i IT osoblju
+   - **Bezbednosti ciljevi (CIA)**:
+     - Poverljivost - zaštita osetljivih informacija koje se čuvaju u IT sistemima
+      - Integritet - osiguravanje integriteta podataka i pouzdanosti sistema
+      -  Dostupnost - osiguravanje operativnosti i pristupa IT sistemima
+   - **Uticaj oštećenja**: Prekid usluga, gubitak podataka i reputacije, smanjena produktivnost kompanije
+
+S obzirom da korporacija ima tri glavna sedišta u Hong Kongu, Bostonu i Londonu, postoje različiti načini za upravljanje osetljivom imovinom kao i zakoni koji doprinose smanjenju rizika od sajber napada.
+
+1. **Hong Kong**
+    -  Tokom protekle decenije je imovina organizacija drastično više izložena sajber napadima. Konstantno se predlažu nove izmene zakona kako bi se ovi problemi rešili. Za kompanije iz sektora bankarstva, hartija od vrednosti i osiguranja postoje određena regulatorna tela poput HKEX, SFC, HKMA i IA koja očekuju efikasno upravljanje poverljivim informacijama i adekvatne reakcije u slučaju incidenata koji ugrožavaju poverljivost
+2. **Boston**
+   - Savezna država Masačusets propisuje standarde zaštite ličnih informacija stanovnika zakonima <em>Standards for the Protection of Personal information of Residents of the Commonwealth</em>, <em>Agency Privacy Rules</em>, i <em>Data Breach Notification Law</em>. Bezbedonosni ciljevi su podeljeni na tehničke, administrativne i operativne ciljeve
+3. **London**
+   - Kao jedan od globalnih finansijskih centara, usled digitalizacije finansijskih usluga, London trpi veliki rizik od sajber napada. Regulatorna tela poput FCA i PRA postavljaju stroge zahteve za bezbednost podataka i upravljanje rizicima u sektoru finansija. Osim toga, GDPR donosi obaveze zaštite privatnosti podataka korisnika i građana EU, koje se takođe primenjuju na organizacije u Londonu. <em>Greater London Authority</em> (GLA) je organ odgovoran za upravljanje Londonom po pitanju transporta, urbanizma, ekonomskog razvoja i kulture. U prethodnom periodu, GLA se susreće sa raznim pretnjama na nivou sajber bezbednosti i ističu sve veću ranjivost podataka, računarskih sistema i usluga. 
 ## Zadatak C
 ### Površine napada
 

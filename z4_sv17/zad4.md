@@ -82,5 +82,5 @@
     - Kredencijali za email i bazu podataka se takođe nalaze u application.properties. Ovo je loša praksa jer se
       kredencijali mogu lako pročitati. Bolje rešenje je korišćenje environment varijabli.
     - Čuvanje poruka kao plain tekst, umesto enrkiptovanih vrednosti.
-
+    - XSS rešava angular, tako da će eventualni propusti biti zakrpljeni Google-a.
 Vreme provedeno je oko 6h, 2h na analizu i 4h na pokretanje OWASP dependency checker-a.

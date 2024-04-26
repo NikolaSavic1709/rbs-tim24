@@ -7,7 +7,7 @@
   - Uroš Stanić
 ### Pronađeni defekti
 
-  #### Statička automatska analiza koda
+  #### Statička automatska analiza koda pomoću Snyk alata
 
    - Isključena zaštita od CSRF (Cross-Site Request Forgery) napada što može dovesti do toga da treća strana iskoristi autorizaciju korisnika i izvrši izmenjen zahtev umesto njega. Rešava se uvođenjem CSRF tokena (uglavnom jednokratan) ili proveravanjem odakle je stigao zahtev.
      

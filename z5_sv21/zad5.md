@@ -7,7 +7,9 @@ Podešeni kredencijali
 ## Logovanje
 
 Praćenje sistema je započeto, a zapisi se skladište u odgovarajuće fajlove što se može videti na slici. 
-<img title="" alt="Logovanje" src="/Capture.PNG">
+
+![Logovanje](Capture.PNG)
+
 Logovanje događaja se radi korišćenjem rsyslog servisa. Preporučeno je da se logovi čuvaju na udaljenom serveru. 
 
 ## Ranjivosti verzije 
@@ -18,19 +20,21 @@ Bez dostupnih ažuriranja
 ## Sinhronizacija vremena sa NTP serverom
 
 Na slici je prikazana lista procesa koji su povezani sa NTP serverom i listu udaljenih NTP servera sa kojim je lokalni server povezan
-<img title="" alt="NTP server" src="/ntpServer.PNG">
+
+![NTP server](ntpServer.PNG)
 
 ## Instalirani paketi
 
 Da bi sistem bio što manje izložen potrebno je da broj instaliranih paketa bude što manji. 
 Pronađeni nepotrebni paketi: libx11-6:amd64, libx11-data, python3-xkit
-<img title="" alt="paketi" src="/packages.PNG">
+
+![paketi](packages.PNG)
 
 ## Firewall
 
 Sigurnosni mehanizam za kontrolu protoka podataka u mreži i između mreža. Aktiviran i dopušten je saobraćaj kroz tri porta: 22 - SSH, 80 - HTTP, 443 - HTTPS. Za pristup virtuelnoj mašini sa fizičke host mašine neophodni su generisani ključevi. Dozvoljen je i pristup saobraćaju iniciranom od samog servera. 
 
-<img title="" alt="firewall" src="/firewall_rules.PNG">
+![firewall](firewall_rules.PNG)
 
 Da bi se smanjila površina potencijalnog napada IPv6 adrese su onemogućene.
 
@@ -38,7 +42,7 @@ Da bi se smanjila površina potencijalnog napada IPv6 adrese su onemogućene.
 
 Opcija noatime se ne koristi, a opcije noexec i nosuid su dodate.
 
-<img title="" alt="file system" src="/filesystem.PNG">
+![file system](filesystem.PNG)
 
 Setuid fajlovi - fajlovi koji se izvršavaju sa privilegijama njihovog vlasnika, a ne trenutnog korisnika.
  
@@ -46,42 +50,53 @@ Setuid fajlovi - fajlovi koji se izvršavaju sa privilegijama njihovog vlasnika,
  s oznacava da se izvrsava kao setuid fajl, a x sa privilegijama trenutnog korisnika
 
  Na slici je prikazana lista datoteka izvan direktorijuma procesa (/proc) koje može pisati/menjati bilo koji korisnik.
-<img title="" alt="file system" src="/proc.PNG">
+
+![file system](proc.PNG)
 
 ## Pregled korisnika
 
 Passwd fajl služi za skladištenje osnovnih podataka o korisnicima kao što su korisničko ime, UID, putanja do korisničkog shell-a... Prikaz passwd fajla je na slici:
-<img title="" alt="passwd" src="/passwd.PNG">
+
+![passwd](passwd.PNG)
 
 Shadow fajl služi za skladištenje kriptovanih (hešovanih) lozinki, informacije o isteku lozinki, poslednjoj promeni... Konkretno, za korisničku lozinku se koristi SHA-512 algoritam ($6$), dok se po default-u u konfiguraciji nalazi da se za hešovanje koristi yescrypt algoritam.
 
 Prikaz sudoers fajla sa definisanim privilegijama korisnika se nalazi na sledecoj slici
-<img title="" alt="sudoers" src="/sudoers.PNG">
+
+![sudoers](sudoers.PNG)
 
 ## Pregled servisa
 
 Otvorene TCP konekcije sistema su prikazane na sledećoj slici 
-<img title="" alt="sudoers" src="/tcp.PNG">
+
+![TCP](tcp.PNG)
 
 ### SSH
 
 SSH konfiguracija je prikazana na sledećoj slici. Port je promenjen sa defaultne vrednosti 22 na 2222. Takođe i konfiguracija firewall-a je promenjena. PermitRootLogin ima vrednost no što zabranjuje root korisniku direktno povezivanje na sistem preko SSH. PubkeyAuthentication ima vrednost yes što omogućava autentifikaciju putem javnih ključeva umesto lozinki što je sigurnija opcija.
-<img title="" alt="ssh-config" src="/ssh.PNG">
+
+![ssh-config](ssh.PNG)
 
 Preko SSH sesije korisnici mogu prosleđivati saobraćaj TCP protokolom na druge računare. Ovo se može zloupotrebiti za pristup drugim sistemima pa je ovde onemogućeno.
-<img title="" alt="ssh-config" src="/ssh-tcp-forwarding.PNG">
+
+![ssh-tcp-forwarding](ssh-tcp-forwarding.PNG)
 
 Na narednim slikama je prikazana otvorenost portova korišćenjem iptables i ufw komandi.
-<img title="" alt="ssh-iptables" src="/ssh-iptables.PNG">
-<img title="" alt="ssh-ufw" src="/ssh-ufw.PNG">
+
+![ssh-iptables](ssh-iptables.PNG)
+
+![ssh-ufw](ssh-ufw.PNG)
 
 ### Apache2
 
 conf-available/security.conf
-<img title="" alt="apache-conf" src="/apache-security.PNG">
+
+![apache-conf](apache-security.PNG)
 
 Kako bi se onemogućilo listanje direktorijuma parametar Indexes je promenjen u -Indexes
-<img title="" alt="apache-conf" src="/apache-indexes.PNG">
+
+![apache-conf](apache-indexes.PNG)
 
 Nema PHP-a, nije omogućen
-<img title="" alt="nema php-a" src="/php.PNG">
+
+![nema php-a](php.PNG)

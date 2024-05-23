@@ -17,5 +17,13 @@ dobili smo sliku na kojoj je flag UNS{V3RY_OLD_4RCH1V3} .
  - Sliku smo uploadovali na [aperisolve](https://www.aperisolve.com/) i alat je pronašao flag skriven u pikselima. Flag je UNS{PMF_5TUD3NT5_LOV3_M4TH}.
  - 
   ### Zadatak 7 - The Queen of the Ocean
- - 
+- Našli smo da je pravo ime ajkule "The Queen of the Ocean" "Nukumi". Na sajtu [ocearch](https://www.ocearch.org/tracker) smo pronašli kretanje te ajkule i da je poslednji put poslala signal Apr 11, 2021, 3:03:07 PM. Flag je RC15{Apr 11, 2021, 3:03:07 PM}
+
+ ### Zadatak 8 - Squad Game Invitation
+- Analizom naloga sa imenom squidgameph1337@gmail.com pomocu sherlock project-a našli smo više naloga od kojih je jedan github. U repository-u squidgame u fajlu [index.html](https://github.com/squidgameph1337/squidgame/blob/main/index.html) nadjen je flag u u div elementu za "phone-number". Flag je NAVY{h4v3_y0u_3v3r_w4tched_!t?}
    
+ ### Zadatak 9 - Maps OSINT 1
+- Pronalskom kuće Save Šumanovića pronašli smo identičnu raskrsnicu. Kordinate su 45.12634206456855,  19.22924411281482. Flag je UNS{45.1263420,19.2292441}
+
+ ### Zadatak 10 - Maps OSINT 2
+- Sliku smo ubacili u image search Google-a koji nas je naveo da tražimo lokaciju na Zaovinskom jezeru. Lokacija slike je 43.87028223634826, 19.385401549856507. Flag je UNS{43.8702822,19.3854015}

@@ -2,15 +2,17 @@ package database
 
 import (
 	"context"
+	"crypto/rand"
+	"crypto/sha256"
 	"database/sql"
+	"encoding/hex"
 	"fmt"
+	_ "github.com/jackc/pgx/v5/stdlib"
+	_ "github.com/joho/godotenv/autoload"
 	"log"
 	"os"
 	"strconv"
 	"time"
-
-	_ "github.com/jackc/pgx/v5/stdlib"
-	_ "github.com/joho/godotenv/autoload"
 )
 
 // Service represents a service that interacts with a database.
@@ -22,6 +24,7 @@ type PostgresService interface {
 	// Close terminates the database connection.
 	// It returns an error if the connection cannot be closed.
 	Close() error
+	GetUserByUsernameAndPassword(username, password string) (*User, error)
 }
 
 type postgresService struct {
@@ -38,6 +41,42 @@ var (
 	dbInstance *postgresService
 )
 
+type User struct {
+	ID       int    `db:"id"`
+	Username string `db:"username"`
+	Password string `db:"password"`
+	Salt     string `db:"salt"`
+}
+
+func (s *postgresService) GetUserByUsernameAndPassword(username, password string) (*User, error) {
+	query := `SELECT id, username, password, salt FROM users WHERE username = $1`
+	row := s.db.QueryRow(query, username)
+	fmt.Println(row)
+	var user User
+	err := row.Scan(&user.ID, &user.Username, &user.Password, &user.Salt)
+
+	if err != nil {
+		fmt.Println("jedan")
+		if err == sql.ErrNoRows {
+			fmt.Println("dva")
+			return nil, nil // No user found with the given username
+		}
+		return nil, err
+	}
+	fmt.Println("tri")
+	// Compute hash of the provided password with the salt
+	hashedPassword := sha256.Sum256([]byte(password + user.Salt))
+	hashedPasswordHex := hex.EncodeToString(hashedPassword[:])
+
+	// Compare the stored password hash with the computed hash
+	if user.Password != hashedPasswordHex {
+		fmt.Println("cetiri")
+		return nil, nil // Password does not match
+	}
+
+	return &user, nil
+}
+
 func NewPostgresService() PostgresService {
 	// Reuse Connection
 	if dbInstance != nil {
@@ -48,10 +87,77 @@ func NewPostgresService() PostgresService {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// Initialize data
+	err = initializeData(db)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	dbInstance = &postgresService{
 		db: db,
 	}
 	return dbInstance
+}
+func checkAndCreateUsersTable(db *sql.DB) error {
+	query := `
+	CREATE TABLE IF NOT EXISTS users (
+		id SERIAL PRIMARY KEY,
+		username VARCHAR(255) UNIQUE NOT NULL,
+		password VARCHAR(255) NOT NULL,
+		salt VARCHAR(255) NOT NULL
+	)`
+	_, err := db.Exec(query)
+	return err
+}
+
+func initializeData(db *sql.DB) error {
+	// Check if users table exists and create it if not
+	err := checkAndCreateUsersTable(db)
+	if err != nil {
+		return err
+	}
+
+	var count int
+	err = db.QueryRow("SELECT COUNT(*) FROM users").Scan(&count)
+	if err != nil {
+		return err
+	}
+
+	if count > 0 {
+		// Users already exist, no need to insert
+		return nil
+	}
+
+	// Users to insert
+	users := []struct {
+		Username string
+		Password string
+	}{
+		{"user1", "password"},
+		{"user2", "password"},
+	}
+
+	for _, u := range users {
+		salt, _ := generateSalt() // Ideally, generate a new salt for each user
+		hashedPassword := sha256.Sum256([]byte(u.Password + salt))
+		hashedPasswordHex := hex.EncodeToString(hashedPassword[:])
+
+		_, err := db.Exec("INSERT INTO users (username, password, salt) VALUES ($1, $2, $3)", u.Username, hashedPasswordHex, salt)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+func generateSalt() (string, error) {
+	salt := make([]byte, 16) // 16 bytes salt
+	_, err := rand.Read(salt)
+	if err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(salt), nil
 }
 
 // Health checks the health of the database connection by pinging the database.

@@ -13,19 +13,22 @@ import (
 )
 
 type Server struct {
-	port     int
-	db       database.Service
-	cs       database.ConsulService
-	postgres database.PostgresService
+	port        int
+	db          database.Service
+	cs          database.ConsulService
+	postgres    database.PostgresService
+	authService *AuthService
 }
 
 func NewServer() *http.Server {
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
+	postgreService := database.NewPostgresService()
 	NewServer := &Server{
-		port:     port,
-		db:       database.New(),
-		cs:       database.NewConsulService(),
-		postgres: database.NewPostgresService(),
+		port:        port,
+		db:          database.New(),
+		cs:          database.NewConsulService(),
+		postgres:    postgreService,
+		authService: NewAuthService(postgreService),
 	}
 
 	// Declare Server config

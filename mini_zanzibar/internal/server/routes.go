@@ -1,6 +1,8 @@
 package server
 
 import (
+	"encoding/json"
+	"miniZanzibar/internal/model"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -14,7 +16,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	r.POST("/consul/put", s.consulPutHandler)
 	r.GET("/consul/get", s.consulGetHandler)
-
+	r.POST("/namespace", s.jsonHandler)
 	return r
 }
 
@@ -56,4 +58,36 @@ func (s *Server) consulGetHandler(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"key": key, "value": string(value)})
+}
+
+func (s *Server) jsonHandler(c *gin.Context) {
+	var namespace model.Namespace
+
+	if err := c.ShouldBindJSON(&namespace); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Unmarshal the JSON data into the Namespace struct
+
+	if !namespace.CheckValid() {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Namespace is not valid"})
+		return
+	}
+
+	namespaceBytes, err := json.Marshal(namespace)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Save the namespace object to Consul
+	err = s.cs.Put(namespace.Name, namespaceBytes)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "JSON received and saved to Consul"})
+
 }

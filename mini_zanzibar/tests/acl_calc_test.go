@@ -52,19 +52,21 @@ func TestAclCalculation(t *testing.T) {
 }`
 	data := []byte(testNamespace)
 
-	// Create a new Document struct
-	doc := model.Document{}
+	// Create a new Namespace struct
+	doc := model.Namespace{}
 
-	// Unmarshal the JSON data into the Document struct
+	// Unmarshal the JSON data into the Namespace struct
 	err := json.Unmarshal(data, &doc)
 	if err != nil {
 		t.Fatalf("Error unmarshalling JSON: %v", err)
 	}
-	doc.GetMappedRelations()
 
-	// Print the Document struct to verify it was populated correctly
+	// Print the Namespace struct to verify it was populated correctly
 	doc.Display()
 
 	// Add an assertion to check if CheckRelation returns true
+	assert.True(t, doc.CheckRelation("editor", "editor"), "CheckRelation should return true")
+	assert.True(t, doc.CheckRelation("owner", "viewer"), "CheckRelation should return true")
+	assert.True(t, doc.CheckRelation("editor", "viewer"), "CheckRelation should return true")
 	assert.True(t, doc.CheckRelation("editor", "editor"), "CheckRelation should return true")
 }

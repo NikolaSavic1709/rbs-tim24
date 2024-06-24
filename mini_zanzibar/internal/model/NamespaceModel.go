@@ -20,15 +20,14 @@ type Relation struct {
 	UsersetRewrite *UsersetRewrite `json:"userset_rewrite,omitempty"`
 }
 
-type Document struct {
-	Name            string     `json:"doc"`
-	Relations       []Relation `json:"relation"`
-	MappedRelations map[string]Relation
+type Namespace struct {
+	Name      string     `json:"name"`
+	Relations []Relation `json:"relation"`
 }
 
-func (d Document) Display() {
-	fmt.Printf("Name: %s\n", d.Name)
-	for _, relation := range d.Relations {
+func (n Namespace) Display() {
+	fmt.Printf("Name: %s\n", n.Name)
+	for _, relation := range n.Relations {
 		fmt.Printf("Relation Name: %s\n", relation.Name)
 		if relation.UsersetRewrite != nil {
 			for _, child := range relation.UsersetRewrite.Union.Child {
@@ -38,35 +37,33 @@ func (d Document) Display() {
 	}
 }
 
-func (d *Document) GetMappedRelations() {
-	d.MappedRelations = make(map[string]Relation)
-	for _, relation := range d.Relations {
-		d.MappedRelations[relation.Name] = relation
-	}
-}
-
-func (d Document) CheckRelation(knownRelation string, wantedRelation string) bool {
-	relation, exists := d.MappedRelations[wantedRelation]
-	if !exists {
-		return false
-	}
-
-	if relation.UsersetRewrite != nil && relation.UsersetRewrite.Union != nil {
-		for _, child := range relation.UsersetRewrite.Union.Child {
-			if child.This != nil && knownRelation == wantedRelation {
-				return true
-			}
-
-			if child.ComputedUserset != nil && child.ComputedUserset.Relation == knownRelation {
-				return true
-			} else if child.ComputedUserset != nil {
-				found := d.CheckRelation(knownRelation, child.ComputedUserset.Relation)
-				if found {
-					return true
+func (n Namespace) CheckRelation(currentRelation string, wantedRelation string) bool {
+	for _, relation := range n.Relations {
+		if relation.Name == wantedRelation {
+			if relation.UsersetRewrite != nil && relation.UsersetRewrite.Union != nil {
+				for _, child := range relation.UsersetRewrite.Union.Child {
+					if child.This != nil && currentRelation == wantedRelation {
+						return true
+					}
+					if child.ComputedUserset != nil && child.ComputedUserset.Relation == currentRelation {
+						return true
+					} else if child.ComputedUserset != nil {
+						found := n.CheckRelation(currentRelation, child.ComputedUserset.Relation)
+						if found {
+							return true
+						}
+					}
 				}
 			}
 		}
 	}
 	return false
+}
 
+func (n Namespace) CheckValid() bool {
+	isValid := true
+	if n.Name == "" || len(n.Relations) <= 0 {
+		isValid = false
+	}
+	return isValid
 }

@@ -1,8 +1,13 @@
 version: '3.8'
 
 services:
-  redis:
-    image: redis:7.2.4
-    restart: always
+#  redis:
+#    image: redis:7.2.4
+#    restart: always
+#    ports:
+#      - "${DB_PORT}:6379"
+  consul:
+    image: hashicorp/consul
+    command: ["consul", "agent", "-dev", "-client", "0.0.0.0"]
     ports:
-      - "${DB_PORT}:6379"
+      - "8500:8500"

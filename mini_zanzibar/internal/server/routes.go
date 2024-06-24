@@ -18,6 +18,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.GET("/consul/get", s.consulGetHandler)
 	r.POST("/namespace", s.namespaceHandler)
 	r.POST("/acl", s.aclHandler)
+	r.GET("/acl/check", s.aclCheckHandler)
 	return r
 }
 
@@ -103,7 +104,7 @@ func (s *Server) aclHandler(c *gin.Context) {
 	var value []byte
 	value, err := s.cs.Get(aclBody.Object)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	if len(value) == 0 {
@@ -155,11 +156,66 @@ func (s *Server) aclHandler(c *gin.Context) {
 	}
 	s.db.Put(aclBody.User, aclsBytes)
 
-	value, err = s.db.Get(aclBody.ParseAcl())
+	value, err = s.db.Get(aclBody.User)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "JSON received and saved to LevelDB", "key": aclBody.ParseAcl(), "value": string(value)})
+}
+
+func (s *Server) aclCheckHandler(c *gin.Context) {
+	object := c.Query("object")
+	relation := c.Query("relation")
+	user := c.Query("user")
+
+	value, err := s.db.Get(user)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{"authorized": false})
+		return
+	}
+	var acls []string
+	err = json.Unmarshal(value, &acls)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{"authorized": false})
+		return
+	}
+	aclBodies := make([]model.AclBody, 0)
+	for _, acl := range acls {
+		var aclBody model.AclBody
+		err = aclBody.ParseFromAcl(acl)
+		if err != nil {
+			continue
+		}
+		aclBodies = append(aclBodies, aclBody)
+	}
+	for _, aclBody := range aclBodies {
+		if aclBody.Object == object && aclBody.User == user && aclBody.Relation == relation {
+			c.JSON(http.StatusOK, gin.H{"authorized": true})
+			return
+		} else {
+			if aclBody.Object == object && aclBody.User == user {
+				value, err = s.cs.Get(aclBody.Object)
+				if err != nil {
+					c.JSON(http.StatusOK, gin.H{"authorized": false})
+					return
+				}
+				var namespace model.Namespace
+				err = json.Unmarshal(value, &namespace)
+				if err != nil {
+					c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+					return
+				}
+				if namespace.CheckRelation(aclBody.Relation, relation) {
+					c.JSON(http.StatusOK, gin.H{"authorized": true})
+					return
+				}
+			} else {
+				continue
+			}
+
+		}
+	}
+	c.JSON(http.StatusOK, gin.H{"authorized": false})
 }

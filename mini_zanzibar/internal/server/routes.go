@@ -123,7 +123,37 @@ func (s *Server) aclHandler(c *gin.Context) {
 
 	//TODO add check for exiting user
 
-	s.db.Put(aclBody.ParseAcl(), []byte("true"))
+	value, err = s.db.Get(aclBody.User)
+	if err != nil && err.Error() != "leveldb: not found" {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	var acls []string
+	if err != nil && err.Error() == "leveldb: not found" {
+		acls = append(acls, aclBody.ParseAcl())
+	} else {
+		err = json.Unmarshal(value, &acls)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		acl := aclBody.ParseAcl()
+		for _, existingAcl := range acls {
+			if existingAcl == acl {
+				c.JSON(http.StatusBadRequest, gin.H{"error": "ACL already exists"})
+				return
+			}
+		}
+
+		acls = append(acls, acl)
+	}
+	aclsBytes, err := json.Marshal(acls)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	s.db.Put(aclBody.User, aclsBytes)
 
 	value, err = s.db.Get(aclBody.ParseAcl())
 	if err != nil {

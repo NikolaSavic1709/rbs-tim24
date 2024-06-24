@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	capi "github.com/hashicorp/consul/api"
 	"log"
 )
@@ -37,6 +38,9 @@ func (s *consulService) Get(key string) ([]byte, error) {
 	pair, _, err := kv.Get(key, nil)
 	if err != nil {
 		return nil, err
+	}
+	if pair == nil {
+		return nil, fmt.Errorf("no value found for key: %s", key)
 	}
 	return pair.Value, nil
 }

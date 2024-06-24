@@ -60,6 +60,16 @@ func (n Namespace) CheckRelation(currentRelation string, wantedRelation string) 
 	return false
 }
 
+func (n Namespace) CheckRelationExistence(relation string) bool {
+	for _, r := range n.Relations {
+		if r.Name == relation {
+			return true
+		}
+	}
+	return false
+
+}
+
 func (n Namespace) CheckValid() bool {
 	isValid := true
 	if n.Name == "" || len(n.Relations) <= 0 {

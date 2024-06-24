@@ -16,7 +16,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	r.POST("/consul/put", s.consulPutHandler)
 	r.GET("/consul/get", s.consulGetHandler)
-	r.POST("/namespace", s.jsonHandler)
+	r.POST("/namespace", s.namespaceHandler)
+	r.POST("/acl", s.aclHandler)
 	return r
 }
 
@@ -60,7 +61,7 @@ func (s *Server) consulGetHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"key": key, "value": string(value)})
 }
 
-func (s *Server) jsonHandler(c *gin.Context) {
+func (s *Server) namespaceHandler(c *gin.Context) {
 	var namespace model.Namespace
 
 	if err := c.ShouldBindJSON(&namespace); err != nil {
@@ -90,4 +91,45 @@ func (s *Server) jsonHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "JSON received and saved to Consul"})
 
+}
+
+func (s *Server) aclHandler(c *gin.Context) {
+	var aclBody model.AclBody
+
+	if err := c.ShouldBindJSON(&aclBody); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	var value []byte
+	value, err := s.cs.Get(aclBody.Object)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	if len(value) == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Object not found"})
+		return
+	}
+	var namespace model.Namespace
+	err = json.Unmarshal(value, &namespace)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	if !namespace.CheckRelationExistence(aclBody.Relation) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Relation not found"})
+		return
+	}
+
+	//TODO add check for exiting user
+
+	s.db.Put(aclBody.ParseAcl(), []byte("true"))
+
+	value, err = s.db.Get(aclBody.ParseAcl())
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "JSON received and saved to LevelDB", "key": aclBody.ParseAcl(), "value": string(value)})
 }

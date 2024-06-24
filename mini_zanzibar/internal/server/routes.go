@@ -30,6 +30,9 @@ func (s *Server) healthHandler(c *gin.Context) {
 	for k, v := range s.cs.Health() {
 		health[k] = v
 	}
+	for k, v := range s.postgres.Health() {
+		health[k] = v
+	}
 	c.JSON(http.StatusOK, health)
 }
 

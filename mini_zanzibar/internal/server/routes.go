@@ -2,14 +2,23 @@ package server
 
 import (
 	"fmt"
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
+	"net/http"
+	"regexp"
 )
 
 func (s *Server) RegisterRoutes() http.Handler {
 	r := gin.Default()
-
+	log.SetLevel(log.InfoLevel)
+	//r.Use(cors.New(cors.Config{
+	//	AllowOrigins:     []string{"http://localhost:4200"},
+	//	AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+	//	AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+	//	ExposeHeaders:    []string{"Content-Length"},
+	//	AllowCredentials: true,
+	//	MaxAge:           12 * time.Hour,
+	//}))
 	r.GET("/", s.HelloWorldHandler)
 	r.GET("/health", s.healthHandler)
 
@@ -32,6 +41,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 }
 
 func (s *Server) LoginHandler(c *gin.Context) {
+
 	var loginData struct {
 		Username string `json:"username"`
 		Password string `json:"password"`
@@ -41,7 +51,18 @@ func (s *Server) LoginHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return
 	}
+	usernameRegex := regexp.MustCompile(`^[a-zA-Z0-9_.-]{3,20}$`)
+	if !usernameRegex.MatchString(loginData.Username) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid username. It must be 3-20 characters long and may only contain letters, numbers, and the characters _ . -"})
+		return
+	}
 
+	// Validate password: 8-20 characters, allows a-zA-Z0-9 and _-.
+	passwordRegex := regexp.MustCompile(`^[a-zA-Z0-9_.-]{8,20}$`)
+	if !passwordRegex.MatchString(loginData.Password) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid password. It must be 8-20 characters long and may only contain letters, numbers, and the characters _ . -"})
+		return
+	}
 	authenticated, err := s.authService.Authenticate(loginData.Username, loginData.Password)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

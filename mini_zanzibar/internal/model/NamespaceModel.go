@@ -39,6 +39,9 @@ func (n Namespace) Display() {
 
 func (n Namespace) CheckRelation(currentRelation string, wantedRelation string) bool {
 	for _, relation := range n.Relations {
+		if relation.Name == wantedRelation && relation.Name == currentRelation {
+			return true
+		}
 		if relation.Name == wantedRelation {
 			if relation.UsersetRewrite != nil && relation.UsersetRewrite.Union != nil {
 				for _, child := range relation.UsersetRewrite.Union.Child {

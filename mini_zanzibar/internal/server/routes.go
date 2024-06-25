@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,7 +16,46 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.POST("/consul/put", s.consulPutHandler)
 	r.GET("/consul/get", s.consulGetHandler)
 
+	r.POST("/login", s.LoginHandler)
+	authorized := r.Group("/")
+	fmt.Println(authorized)
+	authorized.Use(s.AuthMiddleware())
+	{
+		authorized.GET("/protected", s.ProtectedHandler)
+	}
+
 	return r
+}
+
+func (s *Server) LoginHandler(c *gin.Context) {
+	var loginData struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+	fmt.Println("LOGIN1")
+	if err := c.ShouldBindJSON(&loginData); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		return
+	}
+
+	authenticated, err := s.authService.Authenticate(loginData.Username, loginData.Password)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if !authenticated {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid username or password"})
+		return
+	}
+
+	token, err := s.authService.GenerateToken(loginData.Username)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not generate token"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"token": token})
 }
 
 func (s *Server) HelloWorldHandler(c *gin.Context) {

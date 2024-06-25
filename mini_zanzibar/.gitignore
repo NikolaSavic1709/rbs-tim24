@@ -1,6 +1,9 @@
 /data/leveldb/
 data/leveldb/
 
+/data/postgresql/
+data/postgresql/
+
 # Binaries for programs and plugins
 *.exe
 *.exe~

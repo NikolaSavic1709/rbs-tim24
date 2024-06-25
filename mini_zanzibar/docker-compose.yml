@@ -11,3 +11,16 @@ services:
     command: ["consul", "agent", "-dev", "-client", "0.0.0.0"]
     ports:
       - "8500:8500"
+  psql:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - ./data/postgresql:/var/lib/postgresql/data
+
+volumes:
+  psql_volume:

@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"miniZanzibar/internal/model"
 	"net/http"
+	"regexp"
 )
 
 func (s *Server) namespaceHandler(c *gin.Context) {
@@ -15,6 +16,22 @@ func (s *Server) namespaceHandler(c *gin.Context) {
 	if err := c.ShouldBindJSON(&namespace); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
+	}
+
+	nameRegex := regexp.MustCompile(`^[a-zA-Z0-9_.-]+$`)
+
+	// Validate namespace name
+	if !nameRegex.MatchString(namespace.Name) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid namespace name format"})
+		return
+	}
+
+	// Validate each relation name
+	for _, relation := range namespace.Relations {
+		if !nameRegex.MatchString(relation.Name) {
+			c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("Invalid relation name format for relation: %s", relation.Name)})
+			return
+		}
 	}
 
 	if !namespace.CheckValid() {
@@ -60,6 +77,24 @@ func (s *Server) aclHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	aclRegex := regexp.MustCompile(`^([a-zA-Z0-9_.-]+:)*[a-zA-Z0-9_.-]+$`)
+
+	if !aclRegex.MatchString(aclBody.Object) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid object format"})
+		return
+	}
+
+	if !aclRegex.MatchString(aclBody.Relation) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid relation format"})
+		return
+	}
+
+	if !aclRegex.MatchString(aclBody.User) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user format"})
+		return
+	}
+
 	namespace, err := getNamespace(s, aclBody.Object)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

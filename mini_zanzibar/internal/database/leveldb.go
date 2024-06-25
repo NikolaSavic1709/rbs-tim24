@@ -12,6 +12,8 @@ import (
 
 type Service interface {
 	Health() map[string]string
+	Put(acl string, b []byte) error
+	Get(key string) ([]byte, error)
 }
 
 type service struct {
@@ -35,6 +37,15 @@ func New() Service {
 	s := &service{db: db}
 
 	return s
+}
+
+func (s *service) Put(key string, value []byte) error {
+	return s.db.Put([]byte(key), value, nil)
+}
+
+// Get retrieves the value for a key from LevelDB
+func (s *service) Get(key string) ([]byte, error) {
+	return s.db.Get([]byte(key), nil)
 }
 
 // Health returns the health status and statistics of the LevelDB.

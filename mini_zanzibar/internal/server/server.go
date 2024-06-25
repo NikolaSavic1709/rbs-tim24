@@ -17,6 +17,7 @@ type Server struct {
 	db          database.Service
 	cs          database.ConsulService
 	postgres    database.PostgresService
+	redis       database.RedisService
 	authService *AuthService
 }
 
@@ -27,6 +28,7 @@ func NewServer() *http.Server {
 		port:        port,
 		db:          database.New(),
 		cs:          database.NewConsulService(),
+		redis:       database.RedisNew(),
 		postgres:    postgreService,
 		authService: NewAuthService(postgreService),
 	}

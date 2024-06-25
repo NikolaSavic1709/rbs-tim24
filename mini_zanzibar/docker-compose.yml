@@ -17,11 +17,13 @@ services:
 
   consul:
     image: hashicorp/consul
-    command: ["consul", "agent", "-dev", "-client", "0.0.0.0"]
+    command: [ "consul", "agent", "-dev", "-client", "0.0.0.0" ]
     ports:
       - "8500:8500"
     networks:
       - app_network
+    depends_on:
+      - psql
 
   psql:
     image: postgres:15
@@ -49,8 +51,22 @@ services:
     depends_on:
       - psql
       - consul
+      - redis
     networks:
       - app_network
+
+  redis:
+    image: "redis:7.2.4"
+    ports:
+      - "${REDIS_PORT}:6379"
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    restart: always
+
+    networks:
+      - app_network
+    volumes:
+      - ./data/redis-data:/data
+
 
 networks:
   app_network:

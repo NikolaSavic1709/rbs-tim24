@@ -3,7 +3,7 @@ package database
 import (
 	"context"
 	"crypto/rand"
-	"crypto/sha256"
+	"crypto/sha512"
 	"database/sql"
 	"encoding/hex"
 	"fmt"
@@ -65,7 +65,7 @@ func (s *postgresService) GetUserByUsernameAndPassword(username, password string
 	}
 	fmt.Println("tri")
 	// Compute hash of the provided password with the salt
-	hashedPassword := sha256.Sum256([]byte(password + user.Salt))
+	hashedPassword := sha512.Sum512([]byte(password + user.Salt))
 	hashedPasswordHex := hex.EncodeToString(hashedPassword[:])
 
 	// Compare the stored password hash with the computed hash
@@ -140,7 +140,7 @@ func initializeData(db *sql.DB) error {
 
 	for _, u := range users {
 		salt, _ := generateSalt() // Ideally, generate a new salt for each user
-		hashedPassword := sha256.Sum256([]byte(u.Password + salt))
+		hashedPassword := sha512.Sum512([]byte(u.Password + salt))
 		hashedPasswordHex := hex.EncodeToString(hashedPassword[:])
 
 		_, err := db.Exec("INSERT INTO users (username, password, salt) VALUES ($1, $2, $3)", u.Username, hashedPasswordHex, salt)

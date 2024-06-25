@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-var jwtSecret = []byte("secret_key")
+var jwtSecret = []byte("xDGnlTeEGXNeXnZDKn4yo17AL5f3bLLV8o4cz_avigGaUaMeoKeBIWNAnLVQ25609G2UmE-tD-8bZQpZfVbR6A")
 
 type User struct {
 	ID       int    `db:"id"`
@@ -37,7 +37,7 @@ func (a *AuthService) Authenticate(username, password string) (bool, error) {
 }
 
 func (a *AuthService) GenerateToken(username string) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+	token := jwt.NewWithClaims(jwt.SigningMethodHS512, jwt.MapClaims{
 		"username": username,
 		"exp":      time.Now().Add(time.Hour * 72).Unix(),
 	})

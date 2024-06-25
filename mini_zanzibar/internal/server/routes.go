@@ -2,8 +2,8 @@ package server
 
 import (
 	"encoding/json"
-	"miniZanzibar/internal/model"
 	"fmt"
+	"miniZanzibar/internal/model"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -165,8 +165,6 @@ func (s *Server) aclHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Relation not found"})
 		return
 	}
-
-	//TODO add check for exiting user
 
 	value, err = s.db.Get(aclBody.User)
 	if err != nil && err.Error() != "leveldb: not found" {

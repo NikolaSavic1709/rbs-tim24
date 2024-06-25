@@ -4,6 +4,7 @@ import (
 	"fmt"
 	capi "github.com/hashicorp/consul/api"
 	"log"
+	"os"
 )
 
 type ConsulService interface {
@@ -16,8 +17,15 @@ type consulService struct {
 	client *capi.Client
 }
 
+var (
+	consulAddress = os.Getenv("CONSUL_ADDRESS")
+)
+
 func NewConsulService() ConsulService {
 	config := capi.DefaultConfig()
+	if consulAddress != "" {
+		config.Address = consulAddress
+	}
 	client, err := capi.NewClient(config)
 	if err != nil {
 		log.Fatalf("failed to create Consul client: %v", err)

@@ -3,11 +3,13 @@ package server
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 	"net/http"
 )
 
 func (s *Server) RegisterRoutes() http.Handler {
 	r := gin.Default()
+	log.SetLevel(log.InfoLevel)
 	//r.Use(cors.New(cors.Config{
 	//	AllowOrigins:     []string{"http://localhost:4200"},
 	//	AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
@@ -34,6 +36,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 }
 
 func (s *Server) LoginHandler(c *gin.Context) {
+
 	var loginData struct {
 		Username string `json:"username"`
 		Password string `json:"password"`

@@ -14,7 +14,7 @@ func setupLogFile() error {
 	fmt.Println("Setting up log file")
 
 	// Open a file for writing (create it if not exist, append to it if it does)
-	file, err := os.OpenFile("app.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	file, err := os.OpenFile("/var/app/logs/app.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		return fmt.Errorf("failed to open log file: %v", err)
 	}

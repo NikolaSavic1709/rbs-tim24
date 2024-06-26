@@ -10,7 +10,9 @@ services:
       - "443:443"
     volumes:
       - ./nginx/resources:/var/www/resources
-      - ./nginx/log:/var/log/nginx
+      - ./nginx/log:/var/log/nginx/enc
+    environment:
+      - ENCRYPTION_PASSWORD=${ENCRYPTION_PASSWORD}
     depends_on:
       - go_app
     networks:
@@ -54,7 +56,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      PORT: 8080
+      - PORT=8080
     deploy:
       replicas: 3
     ports:
@@ -66,6 +68,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    volumes:
+      - ./logs:/var/app/logs/
     networks:
       - app_network
 

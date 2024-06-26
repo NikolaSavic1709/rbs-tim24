@@ -5,6 +5,7 @@ WORKDIR /app
 
 COPY ./cmd ./cmd
 COPY ./internal ./internal
+COPY ./middlewares ./middlewares
 COPY ./tests ./tests
 COPY ./.env ./.env
 COPY ./.air.toml ./.air.toml

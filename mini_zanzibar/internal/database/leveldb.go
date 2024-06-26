@@ -2,12 +2,11 @@ package database
 
 import (
 	"fmt"
-	"log"
+	_ "github.com/joho/godotenv/autoload"
+	log "github.com/sirupsen/logrus"
+	"github.com/syndtr/goleveldb/leveldb"
 	"os"
 	"time"
-
-	_ "github.com/joho/godotenv/autoload"
-	"github.com/syndtr/goleveldb/leveldb"
 )
 
 type Service interface {
@@ -40,6 +39,10 @@ func New() Service {
 }
 
 func (s *service) Put(key string, value []byte) error {
+	log.WithFields(log.Fields{
+		"key":   key,
+		"value": value,
+	}).Info("Added record to levelDB")
 	return s.db.Put([]byte(key), value, nil)
 }
 

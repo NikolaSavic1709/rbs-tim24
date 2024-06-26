@@ -10,7 +10,9 @@ services:
       - "443:443"
     volumes:
       - ./nginx/resources:/var/www/resources
-      - ./nginx/log:/var/log/nginx
+      - ./nginx/log:/var/log/nginx/enc
+    environment:
+      - ENCRYPTION_PASSWORD=${ENCRYPTION_PASSWORD}
     depends_on:
       - go_app
     networks:

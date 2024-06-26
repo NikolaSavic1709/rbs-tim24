@@ -3,7 +3,8 @@ package database
 import (
 	"fmt"
 	capi "github.com/hashicorp/consul/api"
-	"log"
+	log "github.com/sirupsen/logrus"
+	//"log"
 	"os"
 )
 
@@ -28,7 +29,7 @@ func NewConsulService() ConsulService {
 	}
 	client, err := capi.NewClient(config)
 	if err != nil {
-		log.Fatalf("failed to create Consul client: %v", err)
+		//log.Fatalf("failed to create Consul client: %v", err)
 	}
 
 	return &consulService{client: client}
@@ -37,6 +38,10 @@ func NewConsulService() ConsulService {
 func (s *consulService) Put(key string, value []byte) error {
 	kv := s.client.KV()
 	p := &capi.KVPair{Key: key, Value: value}
+	log.WithFields(log.Fields{
+		"key":   p.Key,
+		"value": string(p.Value), // Convert byte slice to string
+	}).Info("consul KVPair created")
 	_, err := kv.Put(p, nil)
 	return err
 }

@@ -3,22 +3,19 @@ package server
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
+	"miniZanzibar/middlewares"
 	"net/http"
 	"regexp"
 )
 
 func (s *Server) RegisterRoutes() http.Handler {
-	r := gin.Default()
-	log.SetLevel(log.InfoLevel)
-	//r.Use(cors.New(cors.Config{
-	//	AllowOrigins:     []string{"http://localhost:4200"},
-	//	AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
-	//	AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
-	//	ExposeHeaders:    []string{"Content-Length"},
-	//	AllowCredentials: true,
-	//	MaxAge:           12 * time.Hour,
-	//}))
+	//r := gin.Default()
+	r := gin.New()
+
+	// Setup middleware
+	r.Use(gin.Recovery())
+	r.Use(middlewares.LoggingMiddleware())
+	
 	r.GET("/", s.HelloWorldHandler)
 	r.GET("/health", s.healthHandler)
 
@@ -46,7 +43,6 @@ func (s *Server) LoginHandler(c *gin.Context) {
 		Username string `json:"username"`
 		Password string `json:"password"`
 	}
-	fmt.Println("LOGIN1")
 	if err := c.ShouldBindJSON(&loginData); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return

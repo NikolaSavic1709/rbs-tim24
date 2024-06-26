@@ -55,10 +55,10 @@ services:
       dockerfile: Dockerfile
     environment:
       PORT: 8080
-#    deploy:
-#      replicas: 3
+    deploy:
+      replicas: 3
     ports:
-      - "8080:8080"
+      - "8080-8082:8080"
     depends_on:
       psql:
         condition: service_healthy

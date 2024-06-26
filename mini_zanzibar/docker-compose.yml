@@ -10,6 +10,7 @@ services:
       - "443:443"
     volumes:
       - ./nginx/resources:/var/www/resources
+      - ./nginx/log:/var/log/nginx
     depends_on:
       - go_app
     networks:
@@ -24,6 +25,11 @@ services:
       - app_network
     depends_on:
       - psql
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8500/v1/status/leader"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   psql:
     image: postgres:15
@@ -37,6 +43,11 @@ services:
       - ./data/postgresql:/var/lib/postgresql/data
     networks:
       - app_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   go_app:
     build:
@@ -49,9 +60,12 @@ services:
     ports:
       - "8080-8082:8080"
     depends_on:
-      - psql
-      - consul
-      - redis
+      psql:
+        condition: service_healthy
+      consul:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - app_network
 
@@ -61,12 +75,15 @@ services:
       - "${REDIS_PORT}:6379"
     command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
     restart: always
-
     networks:
       - app_network
     volumes:
       - ./data/redis-data:/data
-
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   app_network:

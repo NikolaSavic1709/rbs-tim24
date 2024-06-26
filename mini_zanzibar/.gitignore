@@ -4,6 +4,9 @@ data/leveldb/
 /data/postgresql/
 data/postgresql/
 
+/data/reds-data/
+data/redis-data/
+
 # Binaries for programs and plugins
 *.exe
 *.exe~

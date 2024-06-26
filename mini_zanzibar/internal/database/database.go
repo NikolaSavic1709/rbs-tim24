@@ -27,11 +27,11 @@ var (
 	redis_address  = os.Getenv("REDIS_ADDRESS")
 	redis_port     = os.Getenv("REDIS_PORT")
 	redis_password = os.Getenv("REDIS_PASSWORD")
-	redis_database = os.Getenv("DB_DATABASE")
+	redis_database = os.Getenv("REDIS_DATABASE")
 )
 
 func RedisNew() RedisService {
-	redis_database, err := strconv.Atoi(database)
+	redis_database, err := strconv.Atoi(redis_database)
 	if err != nil {
 		log.Fatalf(fmt.Sprintf("database incorrect %v", err))
 	}

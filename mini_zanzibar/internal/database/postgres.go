@@ -9,7 +9,7 @@ import (
 	"fmt"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	_ "github.com/joho/godotenv/autoload"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"os"
 	"strconv"
 	"time"
@@ -54,23 +54,24 @@ func (s *postgresService) GetUserByUsernameAndPassword(username, password string
 	fmt.Println(row)
 	var user User
 	err := row.Scan(&user.ID, &user.Username, &user.Password, &user.Salt)
-
+	//hashedPassword1 := sha512.Sum512([]byte(password))
+	//hashedPasswordHex1 := hex.EncodeToString(hashedPassword1[:])
+	log.WithFields(log.Fields{
+		"username": username,
+		//"password_hash": hashedPasswordHex1, // Convert byte slice to string
+	}).Info("new login")
 	if err != nil {
-		fmt.Println("jedan")
 		if err == sql.ErrNoRows {
-			fmt.Println("dva")
 			return nil, nil // No user found with the given username
 		}
 		return nil, err
 	}
-	fmt.Println("tri")
 	// Compute hash of the provided password with the salt
 	hashedPassword := sha512.Sum512([]byte(password + user.Salt))
 	hashedPasswordHex := hex.EncodeToString(hashedPassword[:])
 
 	// Compare the stored password hash with the computed hash
 	if user.Password != hashedPasswordHex {
-		fmt.Println("cetiri")
 		return nil, nil // Password does not match
 	}
 
@@ -144,6 +145,9 @@ func initializeData(db *sql.DB) error {
 		hashedPasswordHex := hex.EncodeToString(hashedPassword[:])
 
 		_, err := db.Exec("INSERT INTO users (username, password, salt) VALUES ($1, $2, $3)", u.Username, hashedPasswordHex, salt)
+		log.WithFields(log.Fields{
+			"username": username,
+		}).Info("Added user")
 		if err != nil {
 			return err
 		}
@@ -173,7 +177,6 @@ func (s *postgresService) Health() map[string]string {
 	if err != nil {
 		stats["status"] = "down"
 		stats["error"] = fmt.Sprintf("db down: %v", err)
-		log.Fatalf(fmt.Sprintf("db down: %v", err)) // Log the error and terminate the program
 		return stats
 	}
 
@@ -216,6 +219,5 @@ func (s *postgresService) Health() map[string]string {
 // If the connection is successfully closed, it returns nil.
 // If an error occurs while closing the connection, it returns the error.
 func (s *postgresService) Close() error {
-	log.Printf("Disconnected from database: %s", database)
 	return s.db.Close()
 }

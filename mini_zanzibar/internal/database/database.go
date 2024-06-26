@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/redis/go-redis/v9"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"math"
 	"os"
 	"strconv"
@@ -200,6 +200,10 @@ func parseRedisInfo(info string) map[string]string {
 func (s *redisService) Put(key string, value []byte) error {
 	//ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second) // Default is now 5s
 	//defer cancel()
+	log.WithFields(log.Fields{
+		"key":   key,
+		"value": value,
+	}).Info("Added record to redis")
 	err := s.db.Set(s.ctx, key, value, 0).Err()
 	if err != nil {
 		return fmt.Errorf("failed to set key %v: %v", key, err)

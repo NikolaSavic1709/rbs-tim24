@@ -8,7 +8,11 @@ import (
 	"miniZanzibar/internal/model"
 	"net/http"
 	"regexp"
+	"strconv"
+	"time"
 )
+
+var nsSuffix = "_version"
 
 func (s *Server) namespaceHandler(c *gin.Context) {
 	var namespace model.Namespace
@@ -52,11 +56,20 @@ func (s *Server) namespaceHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+	timestamp := time.Now().Unix()
+	fmt.Println(timestamp)
+	namespaceName := namespace.Name + "_" + strconv.FormatInt(timestamp, 10)
 
 	// Save the namespace object to Consul
-	err = s.cs.Put(namespace.Name, namespaceBytes)
+	err = s.cs.Put(namespaceName, namespaceBytes)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = s.redis.Put(namespace.Name+nsSuffix, []byte(namespaceName))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save data to Redis"})
 		return
 	}
 
@@ -236,7 +249,13 @@ func getAcls(s *Server, object string) ([]model.AclBody, error) {
 
 func getNamespace(s *Server, object string) (model.Namespace, error) {
 	var namespace model.Namespace
-	value, err := s.cs.Get(object)
+	namesapceName, err := s.redis.Get(object + nsSuffix)
+	if err != nil {
+		return namespace, err
+	}
+	namesapceNameStr := string(namesapceName)
+	fmt.Println("Namespace", namesapceNameStr)
+	value, err := s.cs.Get(namesapceNameStr)
 	if err != nil {
 		return namespace, err
 	}
